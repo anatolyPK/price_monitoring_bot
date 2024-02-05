@@ -24,7 +24,7 @@ class Users(Base, TimestampMixin):
 class Products(Base, TimestampMixin):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
-    url = Column(String(255))
+    url = Column(String(255), unique=True)
     last_price = Column(Float)
 
 

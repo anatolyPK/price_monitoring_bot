@@ -1,11 +1,13 @@
 from config.database_config import init_db
-from src.monitoring.parser import start_parse
+from src.monitoring.monitoring import start_monitoring, add_new_product
 
 
 def main():
     # start_bot
     init_db()
-    start_parse()
+    # start_monitoring()
+    add_new_product('https://megamarket.ru/catalog/details/pristavka-igrovaya-microsoft-xbox-series-x-diablo-iv-bundle-100061636297/',
+                    123469)
 
 
 if __name__ == '__main__':
