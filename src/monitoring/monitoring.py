@@ -2,9 +2,9 @@ from contextlib import contextmanager
 
 from config.config import DOMAINS
 from config.logger import setup_logger
-from selenium import webdriver
 from urllib.parse import urlparse
 
+from config.selenium_config import driver_sel
 from db.crud_operations import UserProductsCRUD, ProductsCRUD
 from src.monitoring.comparer import PriceComparer
 from src.monitoring.notification import Notification
@@ -13,15 +13,13 @@ from src.monitoring.notification import Notification
 logger = setup_logger(__name__)
 
 
-# это общий файл, из которого будут выхываться другие модули для парсинга определенного мегамаркета
-
 @contextmanager
 def driver_context():
-    driver = start_driver()
+    driver_cont = driver_sel
     try:
-        yield driver
+        yield driver_cont
     finally:
-        driver.quit()
+        driver_cont.quit()
 
 
 def start_monitoring():
@@ -36,6 +34,7 @@ def parse_and_compare(driver, user_products, users, products):
     parser_class = choose_parser_class(products.url)
     parser = parser_class(driver=driver, product_url=products.url)
     product_price = parser.get_product_price()
+    logger.debug(f'PRICE: {product_price}')
 
     PriceComparer.compare_prices_and_notify_user(product_last_price=products.last_price,
                                                  is_any_change=user_products.is_any_change,
@@ -54,11 +53,6 @@ def add_new_product(url: str, telegram_id: int):
     ProductsCRUD.add_new_product(product_url=url, last_price=product_price)
     Notification.send_price(telegram_id=telegram_id, product_price=product_price)
 
-
-def start_driver():
-    return webdriver.Chrome()
-
-
 def choose_parser_class(url):
     domain = get_domain(url)
     parser_instance = DOMAINS[domain]
@@ -76,5 +70,4 @@ def get_domain(url):
 def extract_domain(url: str) -> str:
     parsed_url = urlparse(url)
     return parsed_url.netloc
-
 

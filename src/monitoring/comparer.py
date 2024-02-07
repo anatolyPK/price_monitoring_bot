@@ -14,7 +14,6 @@ class PriceComparer:
         """Возвращает (изменился ли продукт, оповестить ли пользователя)"""
 
         is_price_has_changed = cls._compare(product_price, product_last_price)
-        logger.debug(is_price_has_changed)
 
         if not is_price_has_changed:
             return

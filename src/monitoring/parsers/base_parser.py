@@ -1,11 +1,17 @@
-from selenium.common import NoSuchElementException
+import random
+import time
+
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
+
+from config.logger import setup_logger
+
+
+logger = setup_logger(__name__)
 
 
 class BaseParser:
-    possible_item_classes = []
-
-    possible_price_class = ''
+    possible_price_class = []
 
     def __init__(self,
                  driver,
@@ -14,27 +20,33 @@ class BaseParser:
         self.product_url = product_url
 
     def get_product_price(self):
-        self.driver.get(url=self.product_url)
-        item_price = self._get_item_price()
-        product_price = self._extract_product_price(item_price)
-        return product_price
+        try:
+            self.driver.set_page_load_timeout(15)
+            self.driver.get(url=self.product_url)
+            self.driver.execute_script("return document.readyState === 'complete';")
 
-    def _get_item_price(self):
-        for class_name in self.possible_item_classes:
+            time.sleep(random.randint(4, 9))
+            product_price = self._extract_product_price()
+            return product_price
+        except TimeoutException:
+            logger.debug("Время ожидания загрузки страницы истекло. Страница не загружена.")
+            return 0  # Или какое-то значение по умолчанию или исключение, в зависимости от вашей логики
+        finally:
+            # Сбрасываем ограничение времени ожидания для следующих загрузок страниц
+            self.driver.set_page_load_timeout(0)
+
+    def _extract_product_price(self):
+        for class_name in self.possible_price_class:
             try:
-                item_price = self.driver.find_element(By.CLASS_NAME, class_name)
-                return item_price
+                product_price = self.driver.find_element(By.CLASS_NAME, class_name)
+                string_price = product_price.get_attribute("innerText")
+                return self._parse_price_to_int(string_price)
             except NoSuchElementException:
                 continue
 
-    def _extract_product_price(self, item_price):
-        product_price = item_price.find_element(By.CLASS_NAME, self.possible_price_class)
-        string_price = product_price.get_attribute("innerText")
-        return self._parse_price_to_int(string_price)
-
-    def _parse_price_to_int(self, price_str):
-        price_str = price_str.replace('\xa0', ' ')
-        price_str = ''.join(c for c in price_str if c.isdigit() or c.isspace())
-        price = int(price_str.replace(' ', ''))
+    def _parse_price_to_int(self, price_str: str, old_space: str = '\xa0') -> int:
+        price_str = price_str.replace(old_space, ' ')
+        price_str = ''.join(c for c in price_str if c.isdigit())
+        price = int(price_str)
         return price
 

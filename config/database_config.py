@@ -17,7 +17,7 @@ if None in [DB_USER, DB_PASS, DB_HOST, DB_NAME]:
 
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 
