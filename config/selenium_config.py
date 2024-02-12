@@ -13,4 +13,3 @@ options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 
 driver_sel = webdriver.Chrome(options=options)
-# driver.set_page_load_timeout(15)

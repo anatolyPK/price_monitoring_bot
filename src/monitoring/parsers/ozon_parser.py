@@ -11,7 +11,8 @@ logger = setup_logger(__name__)
 
 
 class OzonParser(BaseParser):
-    possible_price_class = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2']
+    possible_product_price_class = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2', 'lo4.l3o', 'lp.l8o']
+    possible_product_name_class = ['pl9']
 
     def __init__(self, driver, product_url):
         super().__init__(driver, product_url)

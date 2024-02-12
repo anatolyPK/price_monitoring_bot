@@ -1,3 +1,6 @@
+import random
+import time
+
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
@@ -8,20 +11,20 @@ logger = setup_logger(__name__)
 
 
 class MegaMarkerParser(BaseParser):
-    possible_price_class = ['sales-block-offer-price__price-final']
+    possible_product_price_class = ['sales-block-offer-price__price-final']
+    possible_product_name_class = ['pdp-header__title_only-title']
 
     def __init__(self, driver, product_url, is_consider_bonuses: bool = True):
         super().__init__(driver, product_url)
         self.is_consider_bonuses = is_consider_bonuses
 
-    def get_product_price(self):
-        self.driver.get(url=self.product_url)
-        product_price = self._extract_product_price()
+    def get_product_price_and_name(self):
+        product_price, product_name = super().get_product_price_and_name()
 
         if self.is_consider_bonuses:
             bonuses = self._get_product_bonuses()
             product_price -= bonuses
-        return product_price
+        return product_price, product_name
 
     def _get_product_bonuses(self, ):
         bonus_element = self.driver.find_elements(By.CLASS_NAME, 'money-bonus_loyalty')

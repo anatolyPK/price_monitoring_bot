@@ -2,9 +2,12 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
-def setup_logger(name, level=logging.DEBUG, log_file_path="./logs/information.log", max_bytes=10485760, backup_count=5):
-    log_file_path = os.path.abspath(log_file_path)
+base_log_file_path = os.path.join(script_dir, "logs", "information.log")
+
+
+def setup_logger(name, level=logging.DEBUG, log_file_path=base_log_file_path, max_bytes=10485760, backup_count=5):
 
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(lineno)s %(message)s')
 

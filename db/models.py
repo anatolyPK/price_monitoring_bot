@@ -18,13 +18,14 @@ class TimestampMixin:
 class Users(Base, TimestampMixin):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    telegram_id = Column(BigInteger)
+    telegram_id = Column(BigInteger, unique=True)
 
 
 class Products(Base, TimestampMixin):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
-    url = Column(String(255), unique=True)
+    product_name = Column(String(255))
+    url = Column(String(500), unique=True)
     last_price = Column(Float)
 
 
@@ -35,4 +36,5 @@ class UserProducts(Base, TimestampMixin):
     product = Column(ForeignKey('products.id'))
     is_any_change = Column(Boolean)
     threshold_price = Column(Float)
+    is_take_into_account_bonuses = Column(Boolean)
 
