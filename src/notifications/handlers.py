@@ -1,6 +1,8 @@
 from aiogram import types, F, Router
+from aiogram.enums import ParseMode
+from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import Command, CommandStart
 
 from config.logger import setup_logger
@@ -11,7 +13,6 @@ from src.notifications.states import AddProductStateMachine
 
 
 logger = setup_logger(__name__)
-
 
 router = Router()
 
@@ -29,7 +30,8 @@ async def start_handler(msg: Message):
 @router.message(F.text == "Меню")
 @router.message(F.text == "Выйти в меню")
 @router.message(F.text == "◀️ Выйти в меню")
-async def menu(msg: Message):
+async def menu(msg: Message, state: FSMContext):
+    await state.clear()
     await msg.answer(text.menu, reply_markup=kb.menu)
 
 
@@ -47,17 +49,17 @@ async def enter_link_handler(message: Message, state: FSMContext):
         product_price, product_name = get_product_price_and_name(link)
         await message.answer(f'{product_name}\n'
                              f'Текущая цена: {product_price} руб.\n'
-                             f'{link}', reply_markup=kb.price_change)
+                             f'[Cсылка на товар]({link})', reply_markup=kb.price_change, parse_mode=ParseMode.MARKDOWN)
         await message.answer(text.get_price, reply_markup=kb.price_change)
         await state.update_data(link=link, product_price=product_price, product_name=product_name)
         await state.set_state(AddProductStateMachine.EnterPrice)
     except KeyError:
-        await message.answer(text.parser_not_found, reply_markup=kb.exit_kb) #что будет дальше??? будет ли повтор ?
+        await message.answer(text.parser_not_found, reply_markup=kb.exit_kb)  # что будет дальше??? будет ли повтор ?
     except AttributeError:
-        await message.answer(text.invalid_link, reply_markup=kb.exit_kb)  # что будет дальше??? будет ли повтор ?
+        await message.answer(text.invali1d_link, reply_markup=kb.exit_kb)  # что будет дальше??? будет ли повтор ?
 
 
-@router.message(AddProductStateMachine.EnterPrice, F.text == "Любое изменение цены") # как использовать f.data
+@router.message(AddProductStateMachine.EnterPrice, F.text == "Любое изменение цены")  # как использовать f.data
 async def handle_any_price_change(message: Message, state: FSMContext):
     await state.update_data(any_price_change=True, threshold_price=0)
     await state.set_state(AddProductStateMachine.TrackSales)
@@ -88,26 +90,44 @@ async def enter_consider_bonuses(message: Message, state: FSMContext):
                                       product_name=state_data['product_name'],
                                       is_any_change=state_data['any_price_change'],
                                       is_take_into_account_bonuses=is_include_sales)
-
-    logger.debug(state_data)
     await state.clear()
     await message.answer('Товар успешно добавлен!', reply_markup=kb.menu)
-    await message.answer(str(state_data), reply_markup=kb.menu)
 
 
 @router.message(AddProductStateMachine.TrackSales)
 async def enter_consider_bonuses_handler(message: Message, state: FSMContext):
-    await message.answer('Выберите, пожалуйста, учитывать или не учитывать скидки и бонусные баллы', reply_markup=kb.include_sales)
+    await message.answer('Выберите, пожалуйста, учитывать или не учитывать скидки и бонусные баллы',
+                         reply_markup=kb.include_sales)
 
 
-#------------------GET USER PRODUCTS--------------------------
+# ------------------GET USER PRODUCTS--------------------------
 @router.message(F.text == 'Мои товары')
 async def get_user_products_handler(message: Message):
     products_list = UserProductsCRUD.get_user_products(message.from_user.id)
     for user_products, users, products in products_list:
-        await message.answer(f'{products.product_name} \n {products.last_price} руб. \n {products.url}', reply_markup=kb.menu)
+        callback_data = DeleteProductCallback(action='delete', user_product_id=str(user_products.id)).pack()
+        inline_keyboard = kb.create_delete_product_keyboard(callback_data)
+        await message.answer(
+            f'{products.product_name} \n{products.last_price} руб. \n[Cсылка на товар]({products.url}) \n',
+            reply_markup=inline_keyboard,
+            parse_mode=ParseMode.MARKDOWN)
+
+
+# -----------------DELETE PRODUCT-----------------
+class DeleteProductCallback(CallbackData, prefix='delete'):
+    action: str
+    user_product_id: int
+
+
+@router.callback_query(DeleteProductCallback.filter(F.action == 'delete'))
+async def delete_product_handler(query: CallbackQuery, callback_data: DeleteProductCallback):
+    user_product_id = callback_data.user_product_id
+    logger.debug(user_product_id)
+    if not UserProductsCRUD.delete_user_products(user_product_id):
+        logger.warning(f'Не найдена запись {user_product_id}')
+    await query.answer("Запись удалена!")
 
 
 @router.message()
-async def message_handler(msg: Message):
+async def de_product_handler(msg: Message):
     await msg.answer(f"Твой ID: {msg.from_user.id}")

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, DateTime, func, BigInteger
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -33,8 +33,7 @@ class UserProducts(Base, TimestampMixin):
     __tablename__ = 'user_products'
     id = Column(Integer, primary_key=True)
     user = Column(ForeignKey('users.id'))
-    product = Column(ForeignKey('products.id'))
+    product = Column(ForeignKey('products.id', ondelete='CASCADE'))
     is_any_change = Column(Boolean)
     threshold_price = Column(Float)
     is_take_into_account_bonuses = Column(Boolean)
-

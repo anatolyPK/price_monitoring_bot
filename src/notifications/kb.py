@@ -26,7 +26,12 @@ include_sales = [
 ]
 include_sales = ReplyKeyboardMarkup(keyboard=include_sales, resize_keyboard=True)
 
-
 menu = ReplyKeyboardMarkup(keyboard=menu, resize_keyboard=True)
 exit_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="◀️ Выйти в меню")]], resize_keyboard=True)
 iexit_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="◀️ Выйти в меню", callback_data="menu")]])
+
+
+def create_delete_product_keyboard(callback_data) -> InlineKeyboardMarkup:
+    inline_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Удалить продукт",
+                                                                                  callback_data=callback_data)]])
+    return inline_keyboard

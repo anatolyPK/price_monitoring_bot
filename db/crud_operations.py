@@ -2,11 +2,11 @@ from contextlib import contextmanager
 from functools import wraps
 
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import joinedload
 
 from config.database_config import db_session
 from config.logger import setup_logger
 from db.models import UserProducts, Users, Products
-
 
 logger = setup_logger(__name__)
 
@@ -115,10 +115,22 @@ class UserProductsCRUD:
             if product_id is None:
                 product_id = ProductsCRUD.add_new_product(product_url=product_url,
                                                           product_name=product_name,
-                                                      last_price=last_product_price)
+                                                          last_price=last_product_price)
 
             user_product = UserProducts(user=user_id, product=product_id, is_any_change=is_any_change,
                                         threshold_price=threshold_price,
                                         is_take_into_account_bonuses=is_take_into_account_bonuses)
             session.add(user_product)
             session.commit()
+
+    @staticmethod
+    @database_operation
+    def delete_user_products(user_product_id: int):
+        with db_session() as session:
+            user_product = session.query(UserProducts).get(user_product_id)
+
+            if user_product:
+                session.delete(user_product)
+                session.commit()
+
+            return user_product
