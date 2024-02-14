@@ -21,7 +21,7 @@ class PriceComparer:
         elif is_any_change:
             cls._notify_user()
             logger.debug("Цена изменилась!")
-            ProductsCRUD.set_new_product_price(row_id=product_id, new_price=product_price)
+            ProductsCRUD.set_new_product_price(product_id=product_id, new_price=product_price)
 
         elif product_price <= threshold_price:
             cls._notify_user()

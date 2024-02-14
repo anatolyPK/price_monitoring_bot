@@ -11,11 +11,11 @@ menu = [
 
 price_change = [
     [
-        KeyboardButton(text="Любое изменение цены", callback_data="any_price_change"),
-        KeyboardButton(text="◀️ Выйти в меню", callback_data="any_price_change"),
+        InlineKeyboardButton(text="Любое изменение цены", callback_data="any_price_change"),
+        InlineKeyboardButton(text="◀️ Выйти в меню", callback_data=""),
     ]
 ]
-price_change = ReplyKeyboardMarkup(keyboard=price_change, resize_keyboard=True)
+price_change = InlineKeyboardMarkup(inline_keyboard=price_change)
 
 include_sales = [
     [
@@ -34,4 +34,20 @@ iexit_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="◀
 def create_delete_product_keyboard(callback_data) -> InlineKeyboardMarkup:
     inline_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Удалить продукт",
                                                                                   callback_data=callback_data)]])
+    return inline_keyboard
+
+
+def create_any_product_price(callback_data, callback_data_menu) -> InlineKeyboardMarkup:
+    inline_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Любое изменение цены", callback_data=callback_data)],
+        [InlineKeyboardButton(text="◀️ Выйти в меню", callback_data=callback_data_menu)]
+    ])
+    return inline_keyboard
+
+
+def create_include_sales(callback_data_include, callback_data_not_include) -> InlineKeyboardMarkup:
+    inline_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Учитывать", callback_data=callback_data_include)],
+        [InlineKeyboardButton(text="Не учитывать", callback_data=callback_data_not_include)]
+    ])
     return inline_keyboard

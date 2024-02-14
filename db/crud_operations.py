@@ -1,8 +1,7 @@
 from contextlib import contextmanager
-from functools import wraps
+from typing import Union
 
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import joinedload
 
 from config.database_config import db_session
 from config.logger import setup_logger
@@ -28,9 +27,11 @@ def database_operation(func):
 
 
 class UsersCRUD:
-    @staticmethod
+    @classmethod
     @database_operation
-    def add_new_user(telegram_id: int) -> Users.id:
+    def add_new_user(cls, telegram_id: int) -> int:
+        cls._validate_telegram_id(telegram_id)
+
         with db_session() as session:
             existing_user = session.query(Users).filter_by(telegram_id=telegram_id).first()
             if existing_user:
@@ -41,42 +42,83 @@ class UsersCRUD:
             session.commit()
             return new_user.id
 
-    @staticmethod
+    @classmethod
     @database_operation
-    def get_user(telegram_id) -> Users.id:
+    def get_user_id(cls, telegram_id: int) -> int | None:
+        cls._validate_telegram_id(telegram_id)
+
         with db_session() as session:
             user = session.query(Users).filter_by(telegram_id=telegram_id).first()
             return user.id if user else None
 
+    @staticmethod
+    def _validate_telegram_id(telegram_id: int):
+        if not isinstance(telegram_id, int):
+            logger.warning(f'telegram_id {telegram_id} должен быть целым числом')
+            raise ValueError("telegram_id должен быть целым числом")
+
 
 class ProductsCRUD:
-    @staticmethod
+    @classmethod
     @database_operation
-    def add_new_product(product_url: str, last_price: float, product_name: str) -> Products.id:
+    def add_new_product(cls, product_url: str, last_price: float, product_name: str) -> Products.id:
+
+        cls._validate_product_url(product_url)
+        cls._validate_last_price(last_price)
+        cls._validate_product_name(product_name)
+
         with db_session() as session:
-            product = Products(url=product_url, last_price=last_price, product_name=product_name)
-            session.add(product)
+            product = session.query(Products).filter_by(url=product_url).first()
+
+            if not product:
+                product = Products(url=product_url, last_price=last_price, product_name=product_name)
+                session.add(product)
+                session.commit()
+                return product.id
+
+            product.last_price = last_price
+            product.product_name = product_name
             session.commit()
             return product.id
 
-    @staticmethod
+    @classmethod
     @database_operation
-    def get_product(product_url: str) -> Products.id:
+    def get_product_id(cls, product_url: str) -> int | None:
+        cls._validate_product_url(product_url)
+
         with db_session() as session:
             product = session.query(Products).filter_by(url=product_url).first()
             return product.id if product else None
 
     @staticmethod
     @database_operation
-    def set_new_product_price(row_id: int, new_price: float):
+    def set_new_product_price(product_id: int, new_price: float):
         with db_session() as session:
-            product = session.query(Products).get(row_id)
+            product = session.query(Products).get(product_id)
 
             if product:
                 product.last_price = new_price
                 session.commit()
             else:
-                logger.info(f'Ошибка изменения строки {row_id}')
+                logger.info(f'Ошибка изменения строки {product_id}')
+
+    @staticmethod
+    def _validate_product_url(product_url):
+        if not isinstance(product_url, str) or not product_url:
+            logger.warning(f'product_url {product_url} должен быть непустой строкой')
+            raise ValueError("product_url должен быть непустой строкой")
+
+    @staticmethod
+    def _validate_last_price(last_price):
+        if not isinstance(last_price, (int, float)) or last_price < 0:
+            logger.warning(f'last_price {last_price} должен быть неотрицательным числом')
+            raise ValueError("last_price должен быть неотрицательным числом")
+
+    @staticmethod
+    def _validate_product_name(product_name):
+        if not isinstance(product_name, str) or not product_name:
+            logger.warning(f'product_name {product_name} должен быть неотрицательным числом')
+            raise ValueError("product_name должен быть непустой строкой")
 
 
 class UserProductsCRUD:
@@ -107,11 +149,11 @@ class UserProductsCRUD:
     def add_user_product(telegram_id: int, product_url: str, is_take_into_account_bonuses: bool,
                          threshold_price: float, last_product_price: float, product_name: str, is_any_change: bool):
         with db_session() as session:
-            user_id = UsersCRUD.get_user(telegram_id=telegram_id)
+            user_id = UsersCRUD.get_user_id(telegram_id=telegram_id)
             if user_id is None:
                 user_id = UsersCRUD.add_new_user(telegram_id=telegram_id)
 
-            product_id = ProductsCRUD.get_product(product_url=product_url)
+            product_id = ProductsCRUD.get_product_id(product_url=product_url)
             if product_id is None:
                 product_id = ProductsCRUD.add_new_product(product_url=product_url,
                                                           product_name=product_name,
