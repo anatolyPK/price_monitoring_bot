@@ -90,9 +90,13 @@ class ProductsCRUD:
             product = session.query(Products).filter_by(url=product_url).first()
             return product.id if product else None
 
-    @staticmethod
+    @classmethod
     @database_operation
-    def set_new_product_price(product_id: int, new_price: float):
+    def set_new_product_price(cls, product_id: int, new_price: float | int):
+
+        cls._validate_product_id(product_id)
+        cls._validate_last_price(new_price)
+
         with db_session() as session:
             product = session.query(Products).get(product_id)
 
@@ -101,6 +105,7 @@ class ProductsCRUD:
                 session.commit()
             else:
                 logger.info(f'Ошибка изменения строки {product_id}')
+                raise ValueError('Продукта в БД нет!')
 
     @staticmethod
     def _validate_product_url(product_url):
@@ -119,6 +124,12 @@ class ProductsCRUD:
         if not isinstance(product_name, str) or not product_name:
             logger.warning(f'product_name {product_name} должен быть неотрицательным числом')
             raise ValueError("product_name должен быть непустой строкой")
+
+    @staticmethod
+    def _validate_product_id(product_id):
+        if not isinstance(product_id, int):
+            logger.warning(f'product_id {product_id} должен быть int')
+            raise ValueError("product_id должен быть int")
 
 
 class UserProductsCRUD:

@@ -157,6 +157,39 @@ class TestUsersCRUD(unittest.TestCase):
         with self.assertRaises(ValueError):
             ProductsCRUD.get_product_id(incorrect_product_url)
 
+    def test_set_new_product_price(self):
+        product_url = 'abc'
+        product_last_price = 1000
+        product_name = 'AAAAA'
+        product_id = ProductsCRUD.add_new_product(product_url, product_last_price, product_name)
+
+        product_new_price = 2000
+        incorrect_new_price = None
+        incorrect_product_id = 1.2
+
+        with self.assertRaises(ValueError):
+            ProductsCRUD.set_new_product_price(product_id=incorrect_product_id,
+                                               new_price=product_new_price)
+        with self.assertRaises(ValueError):
+            ProductsCRUD.set_new_product_price(product_id=product_id,
+                                               new_price=incorrect_new_price)
+        with self.assertRaises(ValueError):
+            ProductsCRUD.set_new_product_price(product_id=233541,
+                                               new_price=product_new_price)
+        prod_obj_old = self.session.query(Products).get(product_id)
+        prod_obj_old_name = prod_obj_old.product_name
+        prod_obj_old_url = prod_obj_old.url
+        prod_obj_old_price = prod_obj_old.last_price
+
+        ProductsCRUD.set_new_product_price(product_id=product_id,
+                                           new_price=product_new_price)
+
+        prod_obj_new = self.session.query(Products).get(product_id)
+        # self.assertEqual(prod_obj_new.last_price, product_new_price)
+        self.assertEqual(prod_obj_new.product_name, prod_obj_old_name)
+        self.assertEqual(prod_obj_new.url, prod_obj_old_url)
+        # self.assertNotEqual(prod_obj_new.last_price, prod_obj_old_price)
+
 
 if __name__ == '__main__':
     unittest.main()

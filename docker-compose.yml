@@ -1,0 +1,91 @@
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - '8000:8000'
+    restart: always
+    container_name: 'telegram_price-bot'
+    volumes:
+      - .:/app
+    environment:
+      - .env
+    command: >
+      sh -c "python main.py"
+    depends_on:
+#      - database
+      - selenium
+
+  selenium:
+    image: 'selenium/standalone-chrome:beta'
+    ports:
+      - '4444:4444'
+      - '7900:7900'
+    restart: always
+    shm_size: '2g'
+    container_name: 'selenium_grid'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##
+#
+#    database:
+#      image: postgres:14.9-alpine
+#      environment:
+#        - POSTGRES_DB=dbname
+#        - POSTGRES_USER=dbuser
+#        - POSTGRES_PASSWORD=pass
+#
+#    redis:
+#      image: redis:7.0.5-alpine
+#      restart: always
+#      hostname: redis
+#      command: redis-server
+#      ports:
+#        - '6379:6379'
+#
+#    worker:
+#      build:
+#        context: .
+#      hostname: worker
+#      entrypoint: celery
+#      command: -A config worker --loglevel=info
+#      #    command: sh -c "python -m celery -A config worker"
+#      #    command: -A config worker -l INFO
+#      #    command: [ '--workdir=./src', '-A', 'config', 'worker' ]
+#      volumes:
+#        - .:/code
+#      links:
+#        - redis
+#      depends_on:
+#        - web
+#        - redis
+#
+#    flower:
+#      build:
+#        context: .
+#      hostname: flower
+#      entrypoint: celery
+#      command: -A config flower
+#      volumes:
+#        - .:/code
+#      depends_on:
+#        - redis
+#      ports:
+#        - "5555:5555"

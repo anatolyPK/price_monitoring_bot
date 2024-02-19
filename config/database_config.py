@@ -15,7 +15,8 @@ DB_NAME = os.getenv('DB_NAME')
 if None in [DB_USER, DB_PASS, DB_HOST, DB_NAME]:
     raise ValueError("One or more required environment variables are missing.")
 
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}_test"
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+# DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}_test"
 
 engine = create_engine(DATABASE_URL)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))

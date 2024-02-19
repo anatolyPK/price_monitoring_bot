@@ -24,7 +24,8 @@ def driver_context():
     try:
         yield driver_cont
     finally:
-        driver_cont.execute_script("window.close();") #JavaScript-команду window.close() для закрытия текущего окна
+        ...
+        # driver_cont.close() #JavaScript-команду window.close() для закрытия текущего окна
 
 
 def start_monitoring():
@@ -45,7 +46,7 @@ def parse_and_compare(driver: WebDriver, user_products: UserProducts, users: Use
                                                  is_any_change=user_products.is_any_change,
                                                  threshold_price=user_products.threshold_price,
                                                  product_id=products.id,
-                                                 product_price=product_price,
+                                                 product_new_price=product_price,
                                                  user_id=users.id)
 
 

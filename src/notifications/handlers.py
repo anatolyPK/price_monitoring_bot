@@ -7,6 +7,7 @@ from aiogram.filters import CommandStart
 
 from config.logger import setup_logger
 from db.crud_operations import UsersCRUD, UserProductsCRUD
+from src.monitoring.custom_exceptions import ProductNotFound
 from src.monitoring.monitoring import get_product_price_and_name
 from src.notifications import kb, text
 from src.notifications.states import AddProductStateMachine, DeleteProductCallback, UniversalCallback, \
@@ -63,10 +64,14 @@ async def enter_link_handler(message: Message, state: FSMContext):
         await state.update_data(link=link, product_price=product_price, product_name=product_name)
         await state.set_state(AddProductStateMachine.EnterPrice)
     except KeyError:
+        logger.info(link)
         await message.answer(text.parser_not_found, reply_markup=kb.exit_kb)
     except AttributeError:
         await message.answer(text.invalid_link, reply_markup=kb.exit_kb)
         await message.delete()
+    except ProductNotFound:
+        logger.warning(f'Не определна цена или наименование товара {link}')
+        await message.answer(text.price_or_name_not_detected)
 
 
 # ---PRICE HANDLERS
@@ -106,8 +111,7 @@ async def handle_threshold_price(message: Message, state: FSMContext):
 async def enter_consider_bonuses(query: CallbackQuery, callback_data: ChooseIsIncludeSales, state: FSMContext):
     is_include_sales = True if callback_data.is_include == "include" else False
     state_data = await state.get_data()
-
-    UserProductsCRUD.add_user_product(telegram_id= query.message.from_user.id,
+    UserProductsCRUD.add_user_product(telegram_id=query.from_user.id,
                                       product_url=state_data['link'],
                                       threshold_price=state_data['threshold_price'],
                                       last_product_price=state_data['product_price'],
@@ -131,16 +135,19 @@ async def enter_consider_bonuses_handler(message: Message, state: FSMContext):
 @router.message(F.text == 'Мои товары')
 async def get_user_products_handler(message: Message):
     products_list = UserProductsCRUD.get_user_products(message.from_user.id)
-    for user_products, users, products in products_list:
-        callback_data = DeleteProductCallback(action='delete', user_product_id=str(user_products.id)).pack()
-        inline_keyboard = kb.create_delete_product_keyboard(callback_data)
-        msg = generate_message_for_each_products(product_name=products.product_name,
-                                                 product_last_price=products.last_price,
-                                                 product_url=products.url, is_any_change=user_products.is_any_change,
-                                                 threshold_price=user_products.threshold_price,
-                                                 is_include_bonuses=user_products.is_take_into_account_bonuses)
-        await message.answer(msg, reply_markup=inline_keyboard, parse_mode=ParseMode.MARKDOWN)
-
+    if products_list:
+        for user_products, users, products in products_list:
+            callback_data = DeleteProductCallback(action='delete', user_product_id=str(user_products.id)).pack()
+            inline_keyboard = kb.create_delete_product_keyboard(callback_data)
+            msg = generate_message_for_each_products(product_name=products.product_name,
+                                                     product_last_price=products.last_price,
+                                                     product_url=products.url, is_any_change=user_products.is_any_change,
+                                                     threshold_price=user_products.threshold_price,
+                                                     is_include_bonuses=user_products.is_take_into_account_bonuses)
+            await message.answer(msg, reply_markup=inline_keyboard, parse_mode=ParseMode.MARKDOWN)
+    else:
+        await message.answer(text.products_are_not_being_monitored,
+                             reply_markup=kb.menu)
 
 # -----------------DELETE PRODUCT-----------------
 
