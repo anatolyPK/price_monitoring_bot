@@ -96,12 +96,50 @@ class TestPriceComparer(unittest.TestCase):
         product_id = 1
         user_id = 123
 
-        PriceComparer.compare_prices_and_notify_user(is_any_change, threshold_price,
-                                                     product_last_price, product_price,
-                                                     product_id, user_id)
+        value = PriceComparer.compare_prices_and_notify_user(is_any_change, threshold_price,
+                                                             product_last_price, product_price,
+                                                             product_id, user_id)
 
         mock_notify_user.assert_not_called()
         mock_set_new_price.assert_not_called()
+        self.assertIsNone(value)
+
+    def test_compare_invalid_input(self):
+        num_1 = 100
+        num_2 = 200.1
+        num_3 = [200]
+        num_4 = '100'
+        num_5 = {}
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_1, num_2)
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_1, num_3)
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_1, num_4)
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_1, num_5)
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_3, num_3)
+
+        with self.assertRaises(ValueError):
+            PriceComparer._compare(num_4, num_2)
+
+    def test_compare(self):
+        num_1 = 100
+        num_2 = 200
+
+        val_1 = PriceComparer._compare(num_1, num_1)
+        val_2 = PriceComparer._compare(num_1, num_2)
+
+        self.assertTrue(val_2)
+        self.assertFalse(val_1)
+
+# // TODO test _notify_user
 
 
 if __name__ == '__main__':

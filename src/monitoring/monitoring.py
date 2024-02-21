@@ -1,18 +1,14 @@
 from contextlib import contextmanager
-from typing import Type
 
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from config.config import DOMAINS
 from config.logger import setup_logger
-from urllib.parse import urlparse
-
 from config.selenium_config import driver_sel
 from db.crud_operations import UserProductsCRUD, ProductsCRUD
 from db.models import UserProducts, Users, Products
 from src.monitoring.comparer import PriceComparer
-from src.monitoring.notification import Notification
-from src.monitoring.parsers.base_parser import BaseParser
+from src.monitoring.services.utils import choose_parser_class
+from src.notifications.utils import send_message_price_changed
 
 
 logger = setup_logger(__name__)
@@ -54,7 +50,7 @@ def add_new_product(url: str, telegram_id: int):
     product_price, product_name = get_product_price_and_name(url)
 
     ProductsCRUD.add_new_product(product_url=url, last_price=product_price, product_name=product_name)
-    Notification.send_price(telegram_id=telegram_id, product_price=product_price) #// TODO wtf eto
+    send_message_price_changed(telegram_id=telegram_id, product_price=product_price) #// TODO wtf eto
 
 
 def get_product_price_and_name(url: str) -> tuple[int, str]:
@@ -63,28 +59,4 @@ def get_product_price_and_name(url: str) -> tuple[int, str]:
         parser = parser_class(driver=driver, product_url=url)
         product_price, product_name = parser.get_product_price_and_name()
         return product_price, product_name
-
-
-def choose_parser_class(url: str) -> Type[BaseParser]:
-    domain = get_domain(url)
-    parser_instance = DOMAINS[domain]
-    return parser_instance
-
-
-def get_domain(url: str): #refactor etogo
-    domain = extract_domain(url)
-
-    if not domain:
-        logger.warning(f'Не найден домен {url}')
-        raise AttributeError()
-
-    if domain not in DOMAINS:
-        raise KeyError()
-
-    return domain
-
-
-def extract_domain(url: str) -> str:
-    parsed_url = urlparse(url)
-    return parsed_url.netloc
 

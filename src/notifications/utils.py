@@ -13,3 +13,7 @@ def generate_message_for_each_products(product_name, product_last_price, product
                f'\U00002705Бонусы {bonuses}')
 
     return message
+
+
+def send_message_price_changed():
+    pass

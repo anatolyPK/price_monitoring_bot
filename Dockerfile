@@ -19,6 +19,7 @@ EXPOSE 8000
 
 CMD ["python", "main.py"]
 
+
 #RUN apk add postgresql-client build-base postgresql-dev
 #
 #

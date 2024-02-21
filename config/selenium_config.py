@@ -1,13 +1,10 @@
 import json
-import time
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
-import undetected_chromedriver as uc
-
-
+from fake_useragent import UserAgent
 from config.logger import setup_logger
+
 
 logger = setup_logger(__name__)
 
@@ -26,31 +23,27 @@ def add_script(driver, script):
 
 WebDriver.add_script = add_script
 
-options = uc.ChromeOptions()
+options = webdriver.ChromeOptions()
 
 my_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+# my_user_agent = UserAgent()
 
 # options.add_argument('--no-sandbox')
-# options.add_argument('--window-size=1920,1080')
-options.add_argument('--headless=new')
-# options.add_argument('--disable-gpu')
+# options.add_argument('--headless=new')
 
 options.add_argument(f"--user-agent={my_user_agent}")
 options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 
-# driver_sel = webdriver.Chrome(options=options)
+driver_sel = webdriver.Chrome(options=options)
 
-driver_sel = webdriver.Remote(
-    command_executor='http://172.18.0.2:4444/wd/hub',
-    options=options
-)
+# driver_sel = webdriver.Remote(
+#     command_executor='http://172.18.0.2:4444/wd/hub',
+#     options=options
+# )
 
 driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-# driver_sel.execute_cdp_cmd('Network.setUserAgentOverride', {
-#     "userAgent": my_user_agent}
-# )
 
 add_script(driver_sel,
            '''
@@ -63,7 +56,4 @@ add_script(driver_sel,
             '''
            )
 
-driver_sel.get('https://www.google.com/')
-# logger.debug(driver_sel.execute_script("return navigator.userAgent"))
-# time.sleep(30)
-# logger.debug(driver_sel.execute_script("return navigator.userAgent"))
+logger.debug(driver_sel.execute_script("return navigator.userAgent"))

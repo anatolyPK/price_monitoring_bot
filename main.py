@@ -1,5 +1,4 @@
 import logging
-import os
 import asyncio
 
 from aiogram import Bot, Dispatcher
@@ -41,3 +40,5 @@ if __name__ == '__main__':
 # TODO обработка ошибок (страницы нет, товара нет)
 # TODO ТЕСТОВАЯ БД!!!
 # TODO тесты входных данных
+# TODO почистить requiremrntsd=
+# TODO раз в 4 минуты заходить на любой сайт, если не заходил на другие

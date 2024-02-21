@@ -7,16 +7,24 @@ from config.logger import setup_logger
 from src.monitoring.custom_exceptions import ProductNotFound
 from src.monitoring.parsers.base_parser import BaseParser
 
-
 logger = setup_logger(__name__)
 
 
-class OzonParser(BaseParser):
-    possible_product_price_class = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2', 'lo4.l3o', 'lp.l8o', 'pl0.l9o', 'pl1.pl']
-    possible_product_name_class = ['pl9', 'lq0', 'lq1']
+class OzonClasses:
+    product_price_with_card_classes = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2', 'lo4.l3o', 'lp.l8o', 'pl0.l9o',
+                                            'pl1.pl']
+    product_price_without_card_classes = ['l6p.pl6.ql']
 
-    def __init__(self, driver, product_url):
+    product_name_classes = ['pl9', 'lq0', 'lq1']
+
+
+class OzonParser(BaseParser, OzonClasses):
+
+    def __init__(self, driver, product_url, is_consider_bonuses: bool = True):
         super().__init__(driver, product_url)
+
+        self.product_name_classes = self.product_name_classes
+        self.product_price_classes = self._choose_price_classes(is_consider_bonuses)
 
     def get_product_price_and_name(self) -> tuple[int, str]:
         try:
@@ -50,6 +58,11 @@ class OzonParser(BaseParser):
 
     def _parse_price_to_int(self, price_str: str):
         return super()._parse_price_to_int(price_str, '\u2009')
+
+    def _choose_price_classes(self, is_consider_bonuses):
+        if is_consider_bonuses:
+            return self.product_price_with_card_classes
+        return self.product_price_without_card_classes
 
 
 

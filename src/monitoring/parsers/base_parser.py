@@ -1,55 +1,47 @@
-import pickle
 import random
 import time
-from selenium.webdriver.support import expected_conditions as EC
+from abc import ABC
 
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.wait import WebDriverWait
 
 from config.logger import setup_logger
 from src.monitoring.custom_exceptions import ProductNotFound
 
+
 logger = setup_logger(__name__)
 
 
-class BaseParser:
-    possible_product_price_class = []
-    possible_product_name_class = []
+class BaseParser(ABC):
+
+    # продумать классы для скидок. как будет осущ выбор
 
     def __init__(self, driver: WebDriver, product_url: str):
         self.driver = driver
         self.product_url = product_url
+        # self.product_name_classes = []
+        # self.product_price_classes = []
 
     def get_product_price_and_name(self) -> tuple[int, str]:
-
+        # //TODO FIX ETO
         self.driver.get(url=self.product_url)
-        # time.sleep(2)
-        # for cookie in pickle.load(open('cookies', 'rb')):
-        #     self.driver.add_cookie(cookie)
-        #
-        # cookies_to_add = pickle.load(open('cookies', 'rb'))
-        #
-        # for cookie in cookies_to_add:
-        #     cookie_name = cookie['name']
-        #     existing_cookie = self.driver.get_cookie(cookie_name)
-        #     if existing_cookie:
-        #         self.driver.delete_cookie(cookie_name)
-        #         self.driver.add_cookie(cookie)
-        time.sleep(3)
-        self.driver.refresh()
         time.sleep(random.randint(4, 7))
-        # self.driver.refresh()
-        # pickle.dump(self.driver.get_cookies(), open('cookies', 'wb'))
-
-        product_price = self._extract_product_price()
-        product_name = self._extract_product_name()
-
+        # time.sleep(3)
+        try:
+            product_price = self._extract_product_price()
+            product_name = self._extract_product_name()
+        except Exception as ex: #ввести конкретну ошибку
+            logger.debug(ex)
+            self.driver.refresh()
+            time.sleep(5)
+            product_price = self._extract_product_price()
+            product_name = self._extract_product_name()
+        # time.sleep(random.randint(4, 7))
         return product_price, product_name
 
     def _extract_product_price(self):
-        for class_name in self.possible_product_price_class:
+        for class_name in self.product_price_classes:
             try:
                 product_price = self.driver.find_element(By.CLASS_NAME, class_name)
                 string_price = product_price.get_attribute("innerText")
@@ -59,7 +51,7 @@ class BaseParser:
         raise ProductNotFound(f'Не определена цена товара!')
 
     def _extract_product_name(self):
-        for class_name in self.possible_product_name_class:
+        for class_name in self.product_name_classes:
             try:
                 product_price = self.driver.find_element(By.CLASS_NAME, class_name)
                 return product_price.get_attribute("innerText")

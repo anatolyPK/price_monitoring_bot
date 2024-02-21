@@ -10,10 +10,12 @@ from src.monitoring.parsers.base_parser import BaseParser
 logger = setup_logger(__name__)
 
 
-class MegaMarkerParser(BaseParser):
-    possible_product_price_class = ['sales-block-offer-price__price-final']
-    possible_product_name_class = ['pdp-header__title_only-title']
+class MegaMarketClasses:
+    product_price_classes = ['sales-block-offer-price__price-final']
+    product_name_classes = ['pdp-header__title_only-title']
 
+
+class MegaMarkerParser(BaseParser, MegaMarketClasses):
     def __init__(self, driver, product_url, is_consider_bonuses: bool = True):
         super().__init__(driver, product_url)
         self.is_consider_bonuses = is_consider_bonuses
@@ -26,7 +28,7 @@ class MegaMarkerParser(BaseParser):
             product_price -= bonuses
         return product_price, product_name
 
-    def _get_product_bonuses(self, ):
+    def _get_product_bonuses(self):
         bonus_element = self.driver.find_elements(By.CLASS_NAME, 'money-bonus_loyalty')
         if bonus_element:
             bonus_amount = bonus_element[0].find_element(By.CLASS_NAME, 'bonus-amount')
