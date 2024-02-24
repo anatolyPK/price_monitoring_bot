@@ -7,15 +7,16 @@ from config.logger import setup_logger
 from src.monitoring.custom_exceptions import ProductNotFound
 from src.monitoring.parsers.base_parser import BaseParser
 
+
 logger = setup_logger(__name__)
 
 
 class OzonClasses:
     product_price_with_card_classes = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2', 'lo4.l3o', 'lp.l8o', 'pl0.l9o',
-                                            'pl1.pl']
+                                       'pl1.pl', 'ln5.l3n', 'nl5.n3l']
     product_price_without_card_classes = ['l6p.pl6.ql']
 
-    product_name_classes = ['pl9', 'lq0', 'lq1']
+    product_name_classes = ['pl9', 'lq0', 'lq1', 'ol49', 'l6o.tsHeadline550Medium']
 
 
 class OzonParser(BaseParser, OzonClasses):
@@ -29,12 +30,8 @@ class OzonParser(BaseParser, OzonClasses):
     def get_product_price_and_name(self) -> tuple[int, str]:
         try:
             return super().get_product_price_and_name()
-
         except ProductNotFound:
-            product_price = self._extract_ozon_product_price()
-            product_name = self._extract_ozon_product_name()
-
-            return product_price, product_name
+            return super().get_product_price_and_name()
 
     def _extract_ozon_product_price(self):
         try:

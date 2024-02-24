@@ -8,13 +8,15 @@ from aiogram.filters import CommandStart
 from config.logger import setup_logger
 from db.crud_operations import UsersCRUD, UserProductsCRUD
 from src.monitoring.custom_exceptions import ProductNotFound
-from src.monitoring.monitoring import get_product_price_and_name
+from src.monitoring.tasks import task_get_product_price_and_name
 from src.notifications import kb, text
 from src.notifications.states import AddProductStateMachine, DeleteProductCallback, UniversalCallback, \
     ChooseIsIncludeSales
 from src.notifications.utils import generate_message_for_each_products
 
+
 logger = setup_logger(__name__)
+
 
 router = Router()
 
@@ -53,7 +55,8 @@ async def start_add_product_handler(message: Message, state: FSMContext):
 async def enter_link_handler(message: Message, state: FSMContext):
     link = message.text
     try:
-        product_price, product_name = get_product_price_and_name(link)
+        result = task_get_product_price_and_name.delay(link)
+        product_price, product_name = result.get()
         await message.answer(f'{product_name}\n'
                              f'Текущая цена: {product_price} руб.\n'
                              f'[Cсылка на товар]({link})', parse_mode=ParseMode.MARKDOWN)
@@ -150,6 +153,7 @@ async def get_user_products_handler(message: Message):
                              reply_markup=kb.menu)
 
 # -----------------DELETE PRODUCT-----------------
+
 
 @router.callback_query(DeleteProductCallback.filter(F.action == 'delete'))
 async def delete_product_handler(query: CallbackQuery, callback_data: DeleteProductCallback):

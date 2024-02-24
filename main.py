@@ -1,32 +1,18 @@
 import logging
 import asyncio
 
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
-
-from config.tlg_bot_config import TOKEN
 from config.database_config import init_db
-from src.monitoring.parsers.mega_market_filter import for_personal
-from src.notifications.handlers import router
+from src.monitoring.monitoring import start_monitoring
+from src.notifications.bot_start_up import start_bot
 
 
 def main():
-    # init_db()
+    init_db()
     # start_monitoring()
     # for_personal()
     logging.basicConfig(level=logging.INFO)
     asyncio.run(start_bot())
 
-
-async def start_bot():
-    bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
-    dp = Dispatcher(storage=MemoryStorage())
-    dp.include_router(router)
-
-    # удаляет все обновления, которые пришли когда бот не работал
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
 if __name__ == '__main__':
     main()
@@ -42,3 +28,4 @@ if __name__ == '__main__':
 # TODO тесты входных данных
 # TODO почистить requiremrntsd=
 # TODO раз в 4 минуты заходить на любой сайт, если не заходил на другие
+# TODO при каждом новом вызове создавался новый драйвер

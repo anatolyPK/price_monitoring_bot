@@ -145,6 +145,7 @@ class UserProductsCRUD:
                     .join(Products, UserProducts.product == Products.id)
                     .all()
                 )
+                logger.debug(result)
                 return result
 
             result = (
@@ -153,6 +154,7 @@ class UserProductsCRUD:
                 .join(Products, UserProducts.product == Products.id)
                 .all()
             )
+            logger.debug(result)
             return result
 
     @staticmethod

@@ -24,20 +24,10 @@ class BaseParser(ABC):
         # self.product_price_classes = []
 
     def get_product_price_and_name(self) -> tuple[int, str]:
-        # //TODO FIX ETO
         self.driver.get(url=self.product_url)
         time.sleep(random.randint(4, 7))
-        # time.sleep(3)
-        try:
-            product_price = self._extract_product_price()
-            product_name = self._extract_product_name()
-        except Exception as ex: #ввести конкретну ошибку
-            logger.debug(ex)
-            self.driver.refresh()
-            time.sleep(5)
-            product_price = self._extract_product_price()
-            product_name = self._extract_product_name()
-        # time.sleep(random.randint(4, 7))
+        product_price = self._extract_product_price()
+        product_name = self._extract_product_name()
         return product_price, product_name
 
     def _extract_product_price(self):
@@ -48,6 +38,7 @@ class BaseParser(ABC):
                 return self._parse_price_to_int(string_price)
             except NoSuchElementException:
                 continue
+        logger.info(f'Не определена цена товара!')
         raise ProductNotFound(f'Не определена цена товара!')
 
     def _extract_product_name(self):
@@ -57,6 +48,7 @@ class BaseParser(ABC):
                 return product_price.get_attribute("innerText")
             except NoSuchElementException:
                 continue
+        logger.info(f'Не определено наименование товара!')
         raise ProductNotFound(f'Не определено наименование товара!')
 
     def _parse_price_to_int(self, price_str: str, old_space: str = '\xa0') -> int:

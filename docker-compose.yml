@@ -9,13 +9,18 @@ services:
     volumes:
       - .:/app
     environment:
-      - .env
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
     command: >
       sh -c "python main.py"
     depends_on:
-#      - database
+      - database
       - selenium
-#      - redis
+      - redis
+    networks:
+      - my_network
 
   selenium:
     image: 'selenium/standalone-chrome'
@@ -25,46 +30,102 @@ services:
     restart: always
     shm_size: '512m'
     container_name: 'selenium_grid'
+    networks:
+      my_network:
+        ipv4_address: '172.19.0.3'
 
-#  database:
-#    image: postgres:16.2-alpine
-#    environment:
-#      - .env
-#
-#  redis:
-#    image: redis:7.2.4-alpine
-#    restart: always
-#    hostname: redis
-#    command: redis-server
-#    ports:
-#      - '6379:6379'
-#
-#  worker:
-#    build:
-#      context: .
-#    hostname: worker
+  database:
+    image: postgres:16.2-alpine
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=pass
+    ports:
+      - "54320:5432"
+    networks:
+      - my_network
+
+  redis:
+    image: redis:7.2.4-alpine
+    restart: always
+    hostname: redis
+    command: redis-server
+    ports:
+      - '6379:6379'
+    networks:
+      - my_network
+
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A src.monitoring.tasks worker --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+    links:
+      - redis
+    depends_on:
+      - web
+      - redis
+      - database
+    networks:
+      - my_network
+
+  scheduler:
+    build:
+      context: .
+    hostname: scheduler
+    entrypoint: sh
 #    entrypoint: celery
-#    command: -A config worker --loglevel=info
-#    #    command: sh -c "python -m celery -A config worker"
-#    #    command: -A config worker -l INFO
-#    #    command: [ '--workdir=./src', '-A', 'config', 'worker' ]
-#    volumes:
-#      - .:/code
-#    links:
-#      - redis
-#    depends_on:
-#      - web
-#      - redis
-#
-#  flower:
-#    build:
-#      context: .
-#    hostname: flower
-#    entrypoint: celery
-#    command: -A config flower
-#    volumes:
-#      - .:/code
-#    depends_on:
-#      - redis
-#    ports:
-#      - "5555:5555"
+    command: -c "sleep 10 && celery -A src.monitoring.tasks beat -l INFO"
+
+#    command: -A src.monitoring.tasks beat -l INFO
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+    links:
+      - redis
+    depends_on:
+      - web
+      - redis
+      - database
+    networks:
+      - my_network
+
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A src.monitoring.tasks flower
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: '172.19.0.0/24'

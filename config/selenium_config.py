@@ -36,24 +36,21 @@ options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 
-driver_sel = webdriver.Chrome(options=options)
 
 # driver_sel = webdriver.Remote(
-#     command_executor='http://172.18.0.2:4444/wd/hub',
+#     command_executor='http://172.18.0.4:4444/wd/hub',
 #     options=options
 # )
-
-driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-
-add_script(driver_sel,
-           '''
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_JSON;
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_Proxy;
-                  delete window.cdc_adoQpoasnfa76pfcZLmcfl_Object;
-            '''
-           )
-
-logger.debug(driver_sel.execute_script("return navigator.userAgent"))
+#
+# driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+#
+# add_script(driver_sel,
+#            '''
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_JSON;
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_Proxy;
+#                   delete window.cdc_adoQpoasnfa76pfcZLmcfl_Object;
+#             '''
+#            )

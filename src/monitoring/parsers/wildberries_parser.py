@@ -4,6 +4,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from config.logger import setup_logger
+from src.monitoring.custom_exceptions import ProductNotFound
 from src.monitoring.parsers.base_parser import BaseParser
 
 
@@ -26,6 +27,9 @@ class WildberriesParser(BaseParser, WildberriesClasses):
 
         self.product_name_classes = self.product_name_classes
         self.product_price_classes = self._choose_price_classes(is_consider_bonuses)
+    #
+    # def get_product_price_and_name(self) -> tuple[int, str]:
+    #     return super().get_product_price_and_name()
 
     def _choose_price_classes(self, is_consider_bonuses):
         if is_consider_bonuses:
