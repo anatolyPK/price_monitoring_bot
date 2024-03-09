@@ -7,8 +7,6 @@ import os
 
 from config.logger import setup_logger
 
-load_dotenv()
-
 
 logger = setup_logger(__name__)
 
@@ -17,6 +15,7 @@ DB_PASS = os.getenv('DB_PASS')
 DB_HOST = os.getenv('DB_HOST')
 DB_NAME = os.getenv('DB_NAME')
 
+logger.debug(os.environ.keys())
 logger.debug(f'ENV {DB_USER} {DB_PASS} {DB_HOST} {DB_NAME}')
 
 if None in [DB_USER, DB_PASS, DB_HOST, DB_NAME]:
