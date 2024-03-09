@@ -92,3 +92,32 @@
 
 
 
+2024-03-09 07:48:32,892 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 07:48:32,893 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 07:48:32,895 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 07:48:32,896 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 07:48:32,898 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 07:48:32,899 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 07:48:32,901 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 07:48:32,903 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 07:48:32,904 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 07:48:32,906 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 07:48:44,439 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 07:48:55,553 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 07:48:55,595 DEBUG monitoring.py 127 PRICE: 5919
+2024-03-09 07:49:05,056 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 07:49:05,068 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 07:49:09,575 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 07:49:15,582 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 07:49:15,591 DEBUG monitoring.py 127 PRICE: 486
+2024-03-09 07:49:20,879 DEBUG monitoring.py 127 PRICE: 446
+2024-03-09 07:49:26,803 DEBUG monitoring.py 127 PRICE: 666
+2024-03-09 07:49:30,942 DEBUG monitoring.py 127 PRICE: 1451
+2024-03-09 07:50:09,462 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:50:09,866 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:50:10,790 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:50:19,959 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:51:19,410 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:51:19,793 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:51:20,767 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:51:30,415 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname

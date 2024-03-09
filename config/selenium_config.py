@@ -28,8 +28,8 @@ options = webdriver.ChromeOptions()
 my_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
 # my_user_agent = UserAgent()
 
-# options.add_argument('--no-sandbox')
-# options.add_argument('--headless=new')
+options.add_argument('--no-sandbox')
+options.add_argument('--headless=new')
 
 options.add_argument(f"--user-agent={my_user_agent}")
 options.add_argument("--disable-blink-features=AutomationControlled")

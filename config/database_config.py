@@ -5,9 +5,12 @@ from sqlalchemy.orm import scoped_session, sessionmaker, DeclarativeBase
 from dotenv import load_dotenv
 import os
 
+from config.logger import setup_logger
 
 load_dotenv()
 
+
+logger = setup_logger(__name__)
 
 DB_USER = os.environ['DB_USER']
 # DB_USER = os.getenv('DB_USER')
@@ -25,6 +28,7 @@ DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 # DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 # DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}_test"
 
+logger.debug(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
