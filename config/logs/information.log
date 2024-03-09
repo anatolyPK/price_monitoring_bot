@@ -1,0 +1,90 @@
+2024-03-09 05:06:00,078 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 05:06:00,080 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 05:06:00,083 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 05:06:00,085 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 05:06:00,087 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 05:06:00,088 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 05:06:00,090 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 05:06:00,091 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 05:06:00,093 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 05:06:00,095 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 05:06:08,937 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 05:06:18,199 DEBUG monitoring.py 127 PRICE: 7321
+2024-03-09 05:06:29,074 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:06:29,103 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 05:06:32,828 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 05:08:00,012 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 05:08:00,014 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 05:08:00,020 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 05:08:00,022 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 05:08:00,027 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 05:08:00,029 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 05:08:00,031 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 05:08:00,033 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 05:08:00,034 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 05:08:00,036 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 05:08:05,940 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 05:08:16,638 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:08:16,647 DEBUG monitoring.py 127 PRICE: 5919
+2024-03-09 05:08:25,680 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 05:08:31,127 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 05:08:38,186 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:08:38,197 DEBUG monitoring.py 127 PRICE: 439
+2024-03-09 05:08:47,059 DEBUG monitoring.py 127 PRICE: 446
+2024-03-09 05:08:52,044 DEBUG monitoring.py 127 PRICE: 666
+2024-03-09 05:08:58,029 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:08:58,043 DEBUG monitoring.py 127 PRICE: 1451
+2024-03-09 05:09:05,375 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:09:05,390 DEBUG monitoring.py 127 PRICE: 5228
+2024-03-09 05:09:08,975 DEBUG monitoring.py 127 PRICE: 1851
+2024-03-09 05:10:00,022 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 05:10:00,028 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 05:10:00,030 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 05:10:00,032 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 05:10:00,041 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 05:10:00,043 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 05:10:00,044 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 05:10:00,048 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 05:10:00,049 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 05:10:00,057 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 05:10:09,039 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 05:10:19,208 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:10:19,220 DEBUG monitoring.py 127 PRICE: 7321
+2024-03-09 05:10:29,941 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 05:10:35,455 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 05:12:00,009 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 05:12:00,013 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 05:12:00,015 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 05:12:00,017 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 05:12:00,019 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 05:12:00,020 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 05:12:00,023 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 05:12:00,025 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 05:12:00,027 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 05:12:00,029 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 05:12:11,193 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 05:12:21,458 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:12:21,467 DEBUG monitoring.py 127 PRICE: 5919
+2024-03-09 05:12:30,557 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 05:12:36,036 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 05:12:41,915 DEBUG monitoring.py 127 PRICE: 439
+2024-03-09 05:12:53,437 DEBUG monitoring.py 127 PRICE: 446
+2024-03-09 05:12:59,360 DEBUG monitoring.py 127 PRICE: 666
+2024-03-09 05:13:06,062 DEBUG monitoring.py 127 PRICE: 1451
+2024-03-09 05:13:11,333 DEBUG monitoring.py 127 PRICE: 5228
+2024-03-09 05:13:16,592 DEBUG monitoring.py 127 PRICE: 1851
+2024-03-09 05:14:00,019 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 05:14:00,024 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 05:14:00,026 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 05:14:00,028 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 05:14:00,029 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 05:14:00,031 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 05:14:00,032 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 05:14:00,034 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 05:14:00,036 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 05:14:00,038 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 05:14:07,038 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 05:14:16,902 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:14:16,912 DEBUG monitoring.py 127 PRICE: 7321
+2024-03-09 05:14:27,325 DEBUG comparer.py 37 Цена изменилась!
+2024-03-09 05:14:27,345 DEBUG monitoring.py 127 PRICE: 7321
