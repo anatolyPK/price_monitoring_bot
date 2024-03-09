@@ -89,9 +89,6 @@
 2024-03-09 05:14:27,325 DEBUG comparer.py 37 Цена изменилась!
 2024-03-09 05:14:27,345 DEBUG monitoring.py 127 PRICE: 7321
 
-
-
-
 2024-03-09 07:48:32,892 DEBUG monitoring.py 102 DLInA: 9
 2024-03-09 07:48:32,893 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
 2024-03-09 07:48:32,895 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
@@ -121,3 +118,42 @@
 2024-03-09 07:51:19,793 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
 2024-03-09 07:51:20,767 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
 2024-03-09 07:51:30,415 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:54:26,118 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:54:26,800 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:54:27,377 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 07:54:37,241 DEBUG database_config.py 31 postgresql://dbuser:pass@database/dbname
+2024-03-09 08:00:00,070 DEBUG monitoring.py 102 DLInA: 9
+2024-03-09 08:00:00,072 DEBUG monitoring.py 104 <UserProducts user=3, product=10, is_any_change=True
+2024-03-09 08:00:00,074 DEBUG monitoring.py 104 <UserProducts user=3, product=9, is_any_change=True
+2024-03-09 08:00:00,076 DEBUG monitoring.py 104 <UserProducts user=1, product=2, is_any_change=True
+2024-03-09 08:00:00,078 DEBUG monitoring.py 104 <UserProducts user=2, product=8, is_any_change=True
+2024-03-09 08:00:00,080 DEBUG monitoring.py 104 <UserProducts user=3, product=11, is_any_change=True
+2024-03-09 08:00:00,081 DEBUG monitoring.py 104 <UserProducts user=2, product=7, is_any_change=True
+2024-03-09 08:00:00,083 DEBUG monitoring.py 104 <UserProducts user=1, product=5, is_any_change=True
+2024-03-09 08:00:00,085 DEBUG monitoring.py 104 <UserProducts user=1, product=3, is_any_change=True
+2024-03-09 08:00:00,087 DEBUG monitoring.py 104 <UserProducts user=1, product=6, is_any_change=True
+2024-03-09 08:00:08,712 DEBUG monitoring.py 127 PRICE: 2142
+2024-03-09 08:00:17,928 DEBUG monitoring.py 127 PRICE: 5919
+2024-03-09 08:00:26,865 DEBUG monitoring.py 127 PRICE: 89090
+2024-03-09 08:00:32,398 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 08:00:38,365 DEBUG monitoring.py 127 PRICE: 486
+2024-03-09 08:00:43,965 DEBUG monitoring.py 127 PRICE: 446
+2024-03-09 08:00:49,876 DEBUG monitoring.py 127 PRICE: 666
+2024-03-09 08:00:52,407 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 08:00:55,852 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 08:00:55,853 WARNING monitoring.py 129 Не определена цена товара! https://www.ozon.ru/product/nabor-dlya-uborki-vedro-12l-oknomoyka-shchetka-dlya-pola-shvabra-s-teleskop-cherenkom-130-sm-nasadka-1216266906/?campaignId=336
+2024-03-09 08:00:59,314 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 08:01:03,836 INFO base_parser.py 50 Не определена цена товара!
+2024-03-09 08:01:03,838 WARNING monitoring.py 129 Не определена цена товара! https://www.ozon.ru/product/nastolnaya-igra-fabrika-igr-vo-slavu-rima-delyuks-1290362598/?advert=b_WvjMyzZkvj9EjIHgn4270mdGNND-KKd8BKLRCNu-uw9q_SEzzPV608SQb5iOchR4wNFvvloO1pb0jl7oJoA_hpqhZU5K8396X4xwf_CKgux9mwSWR-TVt4TKaDmYNIBfUx4q8cDgZ9cjnbKOX6AwIqaGNGB2u0P6NTKUae&avtc=1&avte=2&avts=1707641323
+2024-03-09 08:01:07,628 DEBUG monitoring.py 127 PRICE: 1851
+2024-03-09 09:02:30,336 DEBUG database_config.py 20 ENV dbuser pass database dbname
+2024-03-09 09:02:31,043 DEBUG database_config.py 20 ENV dbuser pass database dbname
+2024-03-09 09:02:31,604 DEBUG database_config.py 20 ENV dbuser pass database dbname
+2024-03-09 09:02:41,511 DEBUG database_config.py 20 ENV dbuser pass database dbname
+2024-03-09 09:27:29,686 DEBUG database_config.py 18 KeysView(environ({'HOSTNAME': '0b6ea6f136e9', 'PYTHON_PIP_VERSION': '24.0', 'SHLVL': '1', 'HOME': '/root', 'DB_NAME': 'dbname', 'GPG_KEY': 'A035C8C19219BA821ECEA86B64E628F8D684696D', 'PYTHON_GET_PIP_URL': 'https://github.com/pypa/get-pip/raw/dbf0c85f76fb6e1ab42aa672ffca6f0a675d9ee4/public/get-pip.py', 'PATH': '/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8', 'PYTHON_VERSION': '3.11.8', 'PYTHON_SETUPTOOLS_VERSION': '65.5.1', 'DB_PASS': 'pass', 'PWD': '/app', 'PYTHON_GET_PIP_SHA256': 'dfe9fd5c28dc98b5ac17979a953ea550cec37ae1b47a5116007395bfacff2ab9', 'DB_HOST': 'database', 'DB_USER': 'dbuser'}))
+2024-03-09 09:27:29,688 DEBUG database_config.py 19 ENV dbuser pass database dbname
+2024-03-09 09:27:30,437 DEBUG database_config.py 18 KeysView(environ({'PATH': '/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'HOSTNAME': 'flower', 'DB_HOST': 'database', 'DB_NAME': 'dbname', 'DB_USER': 'dbuser', 'DB_PASS': 'pass', 'LANG': 'C.UTF-8', 'GPG_KEY': 'A035C8C19219BA821ECEA86B64E628F8D684696D', 'PYTHON_VERSION': '3.11.8', 'PYTHON_PIP_VERSION': '24.0', 'PYTHON_SETUPTOOLS_VERSION': '65.5.1', 'PYTHON_GET_PIP_URL': 'https://github.com/pypa/get-pip/raw/dbf0c85f76fb6e1ab42aa672ffca6f0a675d9ee4/public/get-pip.py', 'PYTHON_GET_PIP_SHA256': 'dfe9fd5c28dc98b5ac17979a953ea550cec37ae1b47a5116007395bfacff2ab9', 'HOME': '/root'}))
+2024-03-09 09:27:30,438 DEBUG database_config.py 19 ENV dbuser pass database dbname
+2024-03-09 09:27:31,066 DEBUG database_config.py 18 KeysView(environ({'PATH': '/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'HOSTNAME': 'worker', 'DB_PASS': 'pass', 'DB_HOST': 'database', 'DB_NAME': 'dbname', 'DB_USER': 'dbuser', 'LANG': 'C.UTF-8', 'GPG_KEY': 'A035C8C19219BA821ECEA86B64E628F8D684696D', 'PYTHON_VERSION': '3.11.8', 'PYTHON_PIP_VERSION': '24.0', 'PYTHON_SETUPTOOLS_VERSION': '65.5.1', 'PYTHON_GET_PIP_URL': 'https://github.com/pypa/get-pip/raw/dbf0c85f76fb6e1ab42aa672ffca6f0a675d9ee4/public/get-pip.py', 'PYTHON_GET_PIP_SHA256': 'dfe9fd5c28dc98b5ac17979a953ea550cec37ae1b47a5116007395bfacff2ab9', 'HOME': '/root'}))
+2024-03-09 09:27:31,090 DEBUG database_config.py 19 ENV dbuser pass database dbname
+2024-03-09 09:27:40,615 DEBUG database_config.py 19 ENV dbuser pass database dbname
