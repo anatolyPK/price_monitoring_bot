@@ -13,10 +13,13 @@ logger = setup_logger(__name__)
 
 class OzonClasses:
     product_price_with_card_classes = ['l8o.ol8.l2p', 'l8o.o8l.p12', 'o3l.lo2', 'lo4.l3o', 'lp.l8o', 'pl0.l9o',
-                                       'pl1.pl', 'ln5.l3n', 'nl5.n3l']
+                                       'pl1.pl', 'ln5.l3n', 'nl5.n3l', 'n7l.ln6', 'ln8.l6n', 'l8n.nl6', 'ln9.l7n']
+
     product_price_without_card_classes = ['l6p.pl6.ql']
 
-    product_name_classes = ['pl9', 'lq0', 'lq1', 'ol49', 'l6o.tsHeadline550Medium']
+    product_name_classes = ['pl9', 'lq0', 'lq1', 'ol49', 'l6o.tsHeadline550Medium', 'ol8.tsHeadline550Medium',
+                            'o8l.tsHeadline550Medium', 'lo9.tsheadline550Medium', 'o7l', 'o9l.tsHeadline550Medium',
+                            '0l8']
 
 
 class OzonParser(BaseParser, OzonClasses):
@@ -29,9 +32,9 @@ class OzonParser(BaseParser, OzonClasses):
 
     def get_product_price_and_name(self) -> tuple[int, str]:
         try:
-            return super().get_product_price_and_name()
+            return super().get_product_price_and_name(2, 4)
         except ProductNotFound:
-            return super().get_product_price_and_name()
+            return super().get_product_price_and_name(2, 4)
 
     def _extract_ozon_product_price(self):
         try:

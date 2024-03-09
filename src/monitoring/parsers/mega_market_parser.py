@@ -21,7 +21,7 @@ class MegaMarkerParser(BaseParser, MegaMarketClasses):
         self.is_consider_bonuses = is_consider_bonuses
 
     def get_product_price_and_name(self):
-        product_price, product_name = super().get_product_price_and_name()
+        product_price, product_name = super().get_product_price_and_name(1,2)
 
         if self.is_consider_bonuses:
             bonuses = self._get_product_bonuses()

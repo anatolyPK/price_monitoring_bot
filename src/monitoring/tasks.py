@@ -14,8 +14,8 @@ app.autodiscover_tasks()
 
 
 @app.task
-async def check_new_products_prices():
-    await start_monitoring()
+def check_new_products_prices():
+    start_monitoring()
 
 
 @app.task
@@ -27,7 +27,6 @@ def task_get_product_price_and_name(url):
 app.conf.beat_schedule = {
     'check_new_products_prices-every-30-seconds': {
         'task': 'src.monitoring.tasks.check_new_products_prices',
-        'schedule': 12000.0,
+        'schedule': crontab(minute='*/2'),
     },
-    # Добавьте другие задачи с их расписанием здесь
 }

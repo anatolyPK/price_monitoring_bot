@@ -1,7 +1,9 @@
 from contextlib import contextmanager
 from typing import Union
 
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import joinedload
 
 from config.database_config import db_session
 from config.logger import setup_logger
@@ -29,11 +31,13 @@ def database_operation(func):
 class UsersCRUD:
     @classmethod
     @database_operation
-    def add_new_user(cls, telegram_id: int) -> int:
+    def add_new_user_and_get_user_id(cls, telegram_id: int) -> int:
         cls._validate_telegram_id(telegram_id)
 
         with db_session() as session:
-            existing_user = session.query(Users).filter_by(telegram_id=telegram_id).first()
+            statement = select(Users).filter_by(telegram_id=telegram_id)
+            existing_user = session.execute(statement).scalars().one_or_none()
+
             if existing_user:
                 return existing_user.id
 
@@ -41,15 +45,6 @@ class UsersCRUD:
             session.add(new_user)
             session.commit()
             return new_user.id
-
-    @classmethod
-    @database_operation
-    def get_user_id(cls, telegram_id: int) -> int | None:
-        cls._validate_telegram_id(telegram_id)
-
-        with db_session() as session:
-            user = session.query(Users).filter_by(telegram_id=telegram_id).first()
-            return user.id if user else None
 
     @staticmethod
     def _validate_telegram_id(telegram_id: int):
@@ -93,13 +88,10 @@ class ProductsCRUD:
     @classmethod
     @database_operation
     def set_new_product_price(cls, product_id: int, new_price: float | int):
-
         cls._validate_product_id(product_id)
         cls._validate_last_price(new_price)
-
         with db_session() as session:
             product = session.query(Products).get(product_id)
-
             if product:
                 product.last_price = new_price
                 session.commit()
@@ -135,26 +127,31 @@ class ProductsCRUD:
 class UserProductsCRUD:
     @staticmethod
     @database_operation
-    def get_user_products(telegram_id: int = None):
+    def get_user_products_for_handler(telegram_id: int = None) -> UserProducts:
+        if not telegram_id:
+            raise ValueError # why this error throw
         with db_session() as session:
-            if telegram_id:
-                result = (
-                    session.query(UserProducts, Users, Products)
-                    .join(Users, UserProducts.user == Users.id)
-                    .filter(Users.telegram_id == telegram_id)
-                    .join(Products, UserProducts.product == Products.id)
-                    .all()
-                )
-                logger.debug(result)
-                return result
-
-            result = (
-                session.query(UserProducts, Users, Products)
-                .join(Users, UserProducts.user == Users.id)
-                .join(Products, UserProducts.product == Products.id)
-                .all()
+            query = (
+                select(UserProducts)
+                .options(joinedload(UserProducts.products),
+                         joinedload(UserProducts.users))
+                .where(UserProducts.users.has(telegram_id=telegram_id))
             )
-            logger.debug(result)
+            result = session.execute(query).scalars().all()
+            return result
+
+    @staticmethod
+    @database_operation
+    def get_user_products_for_monitoring():
+        with db_session() as session:
+            query = (
+                select(UserProducts)
+                .join(UserProducts.products)
+                .options(joinedload(UserProducts.products),
+                         joinedload(UserProducts.users))
+                .order_by(Products.url)
+            )
+            result = session.execute(query).scalars().all()
             return result
 
     @staticmethod
@@ -162,9 +159,7 @@ class UserProductsCRUD:
     def add_user_product(telegram_id: int, product_url: str, is_take_into_account_bonuses: bool,
                          threshold_price: float, last_product_price: float, product_name: str, is_any_change: bool):
         with db_session() as session:
-            user_id = UsersCRUD.get_user_id(telegram_id=telegram_id)
-            if user_id is None:
-                user_id = UsersCRUD.add_new_user(telegram_id=telegram_id)
+            user_id = UsersCRUD.add_new_user_and_get_user_id(telegram_id=telegram_id)
 
             product_id = ProductsCRUD.get_product_id(product_url=product_url)
             if product_id is None:
@@ -182,10 +177,33 @@ class UserProductsCRUD:
     @database_operation
     def delete_user_products(user_product_id: int):
         with db_session() as session:
-            user_product = session.query(UserProducts).get(user_product_id)
+            user_product = session.get(UserProducts, user_product_id)
 
             if user_product:
                 session.delete(user_product)
                 session.commit()
+                return user_product
+            raise ValueError(f'Invalid user_product_id: {user_product_id}')
 
-            return user_product
+
+# with db_session() as session:
+#
+#     user_product = session.get(UserProducts, 55)
+#     print(user_product)
+#     # query = (
+    #     select(UserProducts)
+    #     .options(joinedload(UserProducts.products),
+    #              joinedload(UserProducts.users))
+    #     .where(UserProducts.users.has(telegram_id=100))
+    # )
+    # #
+#
+#     statement = select(Users).filter_by(telegram_id=100)
+#     existing_user = session.execute(statement).scalars().one()
+#     print(existing_user)
+# #     result = session.execute(query).scalars().all()
+#     print(result)
+#     for r in result:
+#         print(r.users.telegram_id)
+#         print(r.products.product_name)
+

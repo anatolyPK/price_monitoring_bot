@@ -3,7 +3,7 @@ from src.monitoring.parsers.ozon_parser import OzonParser
 from src.monitoring.parsers.wildberries_parser import WildberriesParser
 
 
-DOMAINS = { #как то нужно вынести в конфиг это
+DOMAINS = {
     'megamarket.ru': MegaMarkerParser,
     'www.megamarket.ru': MegaMarkerParser,
 
@@ -12,4 +12,6 @@ DOMAINS = { #как то нужно вынести в конфиг это
 
     'www.wildberries.ru': WildberriesParser,
     'wildberries.ru': WildberriesParser,
+    'https://wildberries.ru': WildberriesParser,
+
 }

@@ -46,7 +46,7 @@ class TestUsersCRUD(unittest.TestCase):
         telegram_id = 123
 
         with self.session as session:
-            user_id = UsersCRUD.add_new_user(telegram_id)
+            user_id = UsersCRUD.add_new_user_and_get_user_id(telegram_id)
             self.assertIsNotNone(user_id)
             self.assertIsInstance(user_id, int)
 
@@ -54,7 +54,7 @@ class TestUsersCRUD(unittest.TestCase):
             self.assertEqual(user.id, user_id)
             self.assertEqual(user.telegram_id, telegram_id)
 
-            new_user_id = UsersCRUD.add_new_user(telegram_id)
+            new_user_id = UsersCRUD.add_new_user_and_get_user_id(telegram_id)
             users = session.query(Users).all()
             self.assertEqual(new_user_id, user_id)
             self.assertEqual(len(users), 1)
@@ -65,8 +65,8 @@ class TestUsersCRUD(unittest.TestCase):
     def test_get_user(self):
         telegram_id = 123
 
-        new_user_id = UsersCRUD.add_new_user(telegram_id)
-        new_user2_id = UsersCRUD.add_new_user(321)
+        new_user_id = UsersCRUD.add_new_user_and_get_user_id(telegram_id)
+        new_user2_id = UsersCRUD.add_new_user_and_get_user_id(321)
 
         user_id = UsersCRUD.get_user_id(telegram_id)
 
@@ -76,7 +76,7 @@ class TestUsersCRUD(unittest.TestCase):
         self.assertNotEqual(user_id, new_user2_id)
 
 
-class TestUsersCRUD(unittest.TestCase):
+class TestProductCRUD(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from db.models import Base

@@ -31,6 +31,9 @@ class WildberriesParser(BaseParser, WildberriesClasses):
     # def get_product_price_and_name(self) -> tuple[int, str]:
     #     return super().get_product_price_and_name()
 
+    def get_product_price_and_name(self):
+        return super().get_product_price_and_name(3, 5)
+
     def _choose_price_classes(self, is_consider_bonuses):
         if is_consider_bonuses:
             return self.product_price_with_card_classes

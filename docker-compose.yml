@@ -20,7 +20,9 @@ services:
       - selenium
       - redis
     networks:
-      - my_network
+      my_network:
+        ipv4_address: '172.19.0.2'
+
 
   selenium:
     image: 'selenium/standalone-chrome'
@@ -29,6 +31,8 @@ services:
       - '7900:7900'
     restart: always
     shm_size: '512m'
+    volumes:
+      - /dev/shm:/dev/shm
     container_name: 'selenium_grid'
     networks:
       my_network:
@@ -43,7 +47,8 @@ services:
     ports:
       - "54320:5432"
     networks:
-      - my_network
+      my_network:
+        ipv4_address: '172.19.0.4'
 
   redis:
     image: redis:7.2.4-alpine
@@ -53,7 +58,9 @@ services:
     ports:
       - '6379:6379'
     networks:
-      - my_network
+      my_network:
+        ipv4_address: '172.19.0.5'
+
 
   worker:
     build:
@@ -75,7 +82,8 @@ services:
       - redis
       - database
     networks:
-      - my_network
+      my_network:
+        ipv4_address: '172.19.0.6'
 
   scheduler:
     build:
@@ -100,8 +108,8 @@ services:
       - redis
       - database
     networks:
-      - my_network
-
+      my_network:
+        ipv4_address: '172.19.0.7'
   flower:
     build:
       context: .
@@ -120,7 +128,8 @@ services:
     ports:
       - "5555:5555"
     networks:
-      - my_network
+      my_network:
+        ipv4_address: '172.19.0.8'
 
 networks:
   my_network:

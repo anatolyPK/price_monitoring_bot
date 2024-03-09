@@ -1,5 +1,9 @@
 from aiogram.enums import ParseMode
 
+from config.logger import setup_logger
+
+logger = setup_logger(__name__)
+
 
 def generate_message_for_each_products(product_name, product_last_price, product_url,
                                        is_any_change, threshold_price, is_include_bonuses):
@@ -8,11 +12,11 @@ def generate_message_for_each_products(product_name, product_last_price, product
         notification = 'любом изменении цены'
     else:
         notification = f'цене ниже {threshold_price} руб.'
+
     message = (f'[{product_name}]({product_url})\n'
-               f'{product_last_price}\n'
+               f'{product_last_price} руб\n'
                f'\U00002705 Оповещение при {notification}\n'
                f'{bonuses}')
-
     return message
 
 

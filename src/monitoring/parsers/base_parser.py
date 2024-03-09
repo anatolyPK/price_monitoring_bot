@@ -1,3 +1,4 @@
+import datetime
 import random
 import time
 from abc import ABC
@@ -23,11 +24,19 @@ class BaseParser(ABC):
         # self.product_name_classes = []
         # self.product_price_classes = []
 
-    def get_product_price_and_name(self) -> tuple[int, str]:
-        self.driver.get(url=self.product_url)
-        time.sleep(random.randint(4, 7))
+    def get_product_price_and_name(self, min_time_wait: int = 4, max_time_wait: int = 7) -> tuple[int, str]:
+        try:
+            self.driver.get(url=self.product_url)
+        except TimeoutException:
+            pass
+
+        time.sleep(random.randint(min_time_wait, max_time_wait))
         product_price = self._extract_product_price()
         product_name = self._extract_product_name()
+
+        if not product_price or not product_name:
+            raise ProductNotFound('Exception in get product price and name!')
+
         return product_price, product_name
 
     def _extract_product_price(self):
