@@ -12,8 +12,7 @@ logger = setup_logger(__name__)
 
 DB_USER = os.getenv('DB_USER')
 DB_PASS = os.getenv('DB_PASS')
-# DB_HOST = os.getenv('DB_HOST')
-DB_HOST = os.getenv('HOSTNAME')
+DB_HOST = os.getenv('DB_HOST')
 DB_NAME = os.getenv('DB_NAME')
 
 logger.debug(os.environ.keys())
