@@ -88,3 +88,4 @@
 2024-03-09 05:14:16,912 DEBUG monitoring.py 127 PRICE: 7321
 2024-03-09 05:14:27,325 DEBUG comparer.py 37 Цена изменилась!
 2024-03-09 05:14:27,345 DEBUG monitoring.py 127 PRICE: 7321
+
