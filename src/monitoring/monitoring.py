@@ -64,12 +64,12 @@ logger = setup_logger(__name__)
 
 @contextmanager
 def driver_context():
-    driver_sel = webdriver.Chrome(options=options)
-
-    # driver_sel = webdriver.Remote(
-    #     command_executor='http://172.19.0.3:4444/wd/hub',
-    #     options=options
-    # )
+    # driver_sel = webdriver.Chrome(options=options)
+    #
+    driver_sel = webdriver.Remote(
+        command_executor='http://172.19.0.3:4444/wd/hub',
+        options=options
+    )
 
     driver_sel.maximize_window()
     driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
