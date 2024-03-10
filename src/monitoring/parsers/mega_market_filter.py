@@ -8,13 +8,14 @@ logger = setup_logger(__name__)
 
 def for_personal():
     driver = webdriver.Chrome()
+    # driver.set_page_load_timeout(15)
 
     try:
         prices_and_urls = []
         for page_number in range(1, 50):
-            url = f'https://megamarket.ru/catalog/page-{page_number}/?q=iphone%2015%20128'
+            url = f'https://megamarket.ru/catalog/page-{page_number}/?q=iphone%2015%20pro%20128'
+            # try:
             driver.get(url=url)
-
             all_items = driver.find_elements(By.CLASS_NAME, 'item-info')
             items = [item for item in all_items if 'item-info__bottom' not in item.get_attribute("class")]
 
@@ -24,10 +25,11 @@ def for_personal():
                 item_url = get_item_url(item)
                 finally_price = Calculator.count_finally_price(price, bonus, True)
                 prices_and_urls.append((finally_price, item_url))
+            # except TimeoutException:
+            #     pass
 
     except Exception as ex:
-        logger.warning(ex)
-
+        pass
     finally:
         prices_and_urls.sort(key=lambda x: x[0])
         logger.debug(prices_and_urls)

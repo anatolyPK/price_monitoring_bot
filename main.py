@@ -3,12 +3,12 @@ import asyncio
 
 from config.database_config import init_db
 from src.monitoring.monitoring import start_monitoring
+from src.monitoring.parsers.mega_market_filter import for_personal
 from src.notifications.bot_start_up import start_bot
 
 
 def main():
     init_db()
-    # start_monitoring()
     # for_personal()
     logging.basicConfig(level=logging.INFO)
     asyncio.run(start_bot())

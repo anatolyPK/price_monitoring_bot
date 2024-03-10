@@ -27,6 +27,6 @@ def task_get_product_price_and_name(url):
 app.conf.beat_schedule = {
     'check_new_products_prices-every-30-seconds': {
         'task': 'src.monitoring.tasks.check_new_products_prices',
-        'schedule': crontab(minute='*/60'),
+        'schedule': crontab(minute='*/3'),
     },
 }

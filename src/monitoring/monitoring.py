@@ -64,12 +64,12 @@ logger = setup_logger(__name__)
 
 @contextmanager
 def driver_context():
-    # driver_sel = webdriver.Chrome(options=options)
+    driver_sel = webdriver.Chrome(options=options)
 
-    driver_sel = webdriver.Remote(
-        command_executor='http://172.19.0.3:4444/wd/hub',
-        options=options
-    )
+    # driver_sel = webdriver.Remote(
+    #     command_executor='http://172.19.0.3:4444/wd/hub',
+    #     options=options
+    # )
 
     driver_sel.maximize_window()
     driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
@@ -99,9 +99,6 @@ def driver_context():
 
 def start_monitoring():
     products_to_monitoring = UserProductsCRUD.get_user_products_for_monitoring()
-    logger.debug(f'DLInA: {len(products_to_monitoring)}')
-    for x in products_to_monitoring:
-        logger.debug(x)
     if products_to_monitoring is None:
         return
 

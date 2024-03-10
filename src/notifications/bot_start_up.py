@@ -11,8 +11,8 @@ from src.notifications.handlers import router
 load_dotenv()
 
 
-# TOKEN = os.getenv('TOKEN')
-TOKEN = os.environ['TOKEN']
+TOKEN = os.getenv('TOKEN')
+# TOKEN = os.environ['TOKEN']
 
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
