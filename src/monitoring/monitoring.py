@@ -6,7 +6,7 @@ from selenium.common import WebDriverException
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from config.logger import setup_logger
-from config.selenium_config import options, add_script
+from config.selenium_config import options, add_script, driver_context
 from db.crud_operations import UserProductsCRUD, ProductsCRUD
 from db.models import UserProducts, Users, Products
 from src.monitoring.comparer import PriceComparer
@@ -62,40 +62,6 @@ logger = setup_logger(__name__)
 #             ...   # Ничего не делаем здесь, чтобы сохранить драйвер открытым
 #
 
-@contextmanager
-def driver_context():
-    # driver_sel = webdriver.Chrome(options=options)
-    #
-    driver_sel = webdriver.Remote(
-        command_executor='http://172.19.0.3:4444/wd/hub',
-        options=options
-    )
-
-    driver_sel.maximize_window()
-    driver_sel.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-    driver_sel.set_page_load_timeout(8)
-
-    add_script(driver_sel,
-               '''
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_JSON;
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Proxy;
-                      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Object;
-                '''
-               )
-    driver_cont = driver_sel
-
-    try:
-        yield driver_cont
-    except WebDriverException:
-        driver_cont.close()
-    # except Exception as ex:
-    #     logger.debug(f'AAAA {ex}')
-    finally:
-        driver_cont.quit()
-
 
 def start_monitoring():
     products_to_monitoring = UserProductsCRUD.get_user_products_for_monitoring()
@@ -111,7 +77,7 @@ def parse_and_compare(driver: WebDriver, user_product: UserProducts):
     parser_class = choose_parser_class(user_product.products.url)
     parser = parser_class(driver=driver, product_url=user_product.products.url)
     try:
-        product_price, product_name = parser.get_product_price_and_name()
+        product_price, product_name = parser.get_product_prices_and_name()
 
         PriceComparer.compare_prices_and_notify_user(product_last_price=user_product.products.last_price,
                                                      is_any_change=user_product.is_any_change,
@@ -137,5 +103,10 @@ def get_product_price_and_name_from_handlers(url: str) -> tuple[int, str]:
     with driver_context() as driver:
         parser_class = choose_parser_class(url)
         parser = parser_class(driver=driver, product_url=url)
-        product_price, product_name = parser.get_product_price_and_name()
+        product_price, product_name = parser.get_product_prices_and_name()
         return product_price, product_name
+
+
+# print(get_product_price_and_name_from_handlers('https://www.ozon.ru/product/krovatka-detskaya-120-h-60-sm-seraya-leia-3-polozheniya-spalnogo-dna-po-mere-rosta-malysha-ot-0-do-5-943384899/?avtc=1&avte=2&avts=1710053225&sh=p7GpDapUlg'))
+# print(get_product_price_and_name_from_handlers('https://megamarket.ru/catalog/details/smartfon-apple-iphone-13-128gb-blue-mlng3ah-a-kuveyt-sa-100033353124/'))
+# print(get_product_price_and_name_from_handlers('https://megamarket.ru/catalog/details/smartfon-apple-iphone-15-128-gb-zelenyy-100061779873/#?related_search=iphone%2015%20pro%20128'))

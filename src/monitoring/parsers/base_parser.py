@@ -3,6 +3,7 @@ import random
 import time
 from abc import ABC
 
+from bs4 import BeautifulSoup
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -15,50 +16,50 @@ logger = setup_logger(__name__)
 
 
 class BaseParser(ABC):
-
+    MIN_TIME_WAIT = None
+    MAX_TIME_WAIT = None
     # продумать классы для скидок. как будет осущ выбор
 
     def __init__(self, driver: WebDriver, product_url: str):
         self.driver = driver
         self.product_url = product_url
-        # self.product_name_classes = []
-        # self.product_price_classes = []
 
-    def get_product_price_and_name(self, min_time_wait: int = 4, max_time_wait: int = 7) -> tuple[int, str]:
-        try:
-            self.driver.get(url=self.product_url)
-        except TimeoutException:
-            pass
+    def get_product_prices_and_name(self) -> tuple[int, str]:
+        soup = self._get_soup_page_instance()
 
-        time.sleep(random.randint(min_time_wait, max_time_wait))
-        product_price = self._extract_product_price()
-        product_name = self._extract_product_name()
+        product_price = self._extract_product_prices(soup)
+        product_name = self._extract_product_name(soup)
 
         if not product_price or not product_name:
             raise ProductNotFound('Exception in get product price and name!')
 
         return product_price, product_name
 
-    def _extract_product_price(self):
-        for class_name in self.product_price_classes:
-            try:
-                product_price = self.driver.find_element(By.CLASS_NAME, class_name)
-                string_price = product_price.get_attribute("innerText")
-                return self._parse_price_to_int(string_price)
-            except NoSuchElementException:
-                continue
-        logger.info(f'Не определена цена товара!')
-        raise ProductNotFound(f'Не определена цена товара!')
+    def _get_soup_page_instance(self):
+        try:
+            self.driver.get(url=self.product_url)
+        except TimeoutException:
+            pass
 
-    def _extract_product_name(self):
-        for class_name in self.product_name_classes:
-            try:
-                product_price = self.driver.find_element(By.CLASS_NAME, class_name)
-                return product_price.get_attribute("innerText")
-            except NoSuchElementException:
-                continue
-        logger.info(f'Не определено наименование товара!')
-        raise ProductNotFound(f'Не определено наименование товара!')
+        time.sleep(random.randint(self.MIN_TIME_WAIT, self.MAX_TIME_WAIT))
+
+        html_content = self.driver.page_source
+        return BeautifulSoup(html_content, 'html.parser')
+
+    def _extract_product_name(self, soup: BeautifulSoup, class_name: str):
+        name = soup.select_one(class_name)
+        if name:
+            return name.text.strip()
+        logger.debug(f'Не удалось извлечь наименование товара! {soup}')
+        raise ProductNotFound("Не удалось извлечь наименование товара!")
+
+    def _price_extractor(self, soup: BeautifulSoup, class_name):
+        price = soup.select_one(class_name)
+        if price:
+            return self._parse_price_to_int(price.text.strip())
+
+    def _extract_product_prices(self, soup: BeautifulSoup):
+        pass
 
     def _parse_price_to_int(self, price_str: str, old_space: str = '\xa0') -> int:
         price_str = price_str.replace(old_space, ' ')

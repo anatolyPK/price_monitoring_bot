@@ -1,5 +1,6 @@
 import time
 
+from bs4 import BeautifulSoup
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
@@ -11,32 +12,22 @@ from src.monitoring.parsers.base_parser import BaseParser
 logger = setup_logger(__name__)
 
 
-class WildberriesClasses:
-    product_price_with_card_classes = ['sales-block-offer-price__price-final',
-                                       'price-block__final-price',
-                                       'price-block__wallet-price']
-    product_price_without_card_classes = ['price-block__final-price',
-                                          'price-block__wallet-price.wallet']
-    product_name_classes = ['pdp-header__title_only-title',
-                            'product-page__title']
+class WildberriesParser(BaseParser):
+    MIN_TIME_WAIT = 3
+    MAX_TIME_WAIT = 5
 
-
-class WildberriesParser(BaseParser, WildberriesClasses):
     def __init__(self, driver, product_url, is_consider_bonuses: bool = True):
         super().__init__(driver, product_url)
+        self.is_consider_bonuses = is_consider_bonuses
 
-        self.product_name_classes = self.product_name_classes
-        self.product_price_classes = self._choose_price_classes(is_consider_bonuses)
-    #
-    # def get_product_price_and_name(self) -> tuple[int, str]:
-    #     return super().get_product_price_and_name()
+    def _extract_product_prices(self, soup: BeautifulSoup) -> int:
+        old_price = self._price_extractor(soup, '.price-block__old-price')
+        final_price = self._price_extractor(soup, '.price-block__final-price')
+        wallet_price = self._price_extractor(soup, '.price-block__wallet-price')
 
-    def get_product_price_and_name(self):
-        return super().get_product_price_and_name(3, 5)
+        if self.is_consider_bonuses and wallet_price:
+            return wallet_price
+        return final_price
 
-    def _choose_price_classes(self, is_consider_bonuses):
-        if is_consider_bonuses:
-            return self.product_price_with_card_classes
-        return self.product_price_without_card_classes
-
-
+    def _extract_product_name(self, soup: BeautifulSoup):
+        return super()._extract_product_name(soup, ".product-page__title")

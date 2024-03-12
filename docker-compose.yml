@@ -17,14 +17,14 @@ services:
       sh -c "python main.py"
     depends_on:
       - database
-      - selenium
+      - chrome1
+      - chrome2
       - redis
     networks:
       my_network:
         ipv4_address: '172.19.0.2'
 
-
-  selenium:
+  chrome1:
     image: 'selenium/standalone-chrome'
     ports:
       - '4444:4444'
@@ -33,10 +33,24 @@ services:
     shm_size: '512m'
     volumes:
       - /dev/shm:/dev/shm
-    container_name: 'selenium_grid'
+    container_name: 'selenium_chrome1'
     networks:
       my_network:
         ipv4_address: '172.19.0.3'
+
+  chrome2:
+    image: 'selenium/standalone-chrome'
+    ports:
+      - '4445:4444'
+      - '7901:7900'
+    restart: always
+    shm_size: '512m'
+    volumes:
+      - /dev/shm:/dev/shm
+    container_name: 'selenium_chrome2'
+    networks:
+      my_network:
+        ipv4_address: '172.19.0.9'
 
   database:
     image: postgres:16.2-alpine
@@ -60,7 +74,6 @@ services:
     networks:
       my_network:
         ipv4_address: '172.19.0.5'
-
 
   worker:
     build:
